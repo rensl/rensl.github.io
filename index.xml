@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>https://rensl.github.io/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 28 Feb 2020 14:51:55 +0800</lastBuildDate>
+    
+	<atom:link href="https://rensl.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>scs_alarm</title>
+      <link>https://rensl.github.io/post/blog/</link>
+      <pubDate>Fri, 28 Feb 2020 14:51:55 +0800</pubDate>
+      
+      <guid>https://rensl.github.io/post/blog/</guid>
+      <description>#报警接口web服务
+ 2019.12.18 修改历史报警请求字段（is_event, status, is_confirm, confirm_user）
+##实时报警
+1 说明 本文件定义了MetroView4.0实时报警web接口
+2 接口定义 2.1 获取全部报警 （1）接口格式
+url:/alarm/real/pull method:post data: { &amp;quot;type&amp;quot;:&amp;quot;record&amp;quot;, &amp;quot;fields&amp;quot;:[ {&amp;quot;name&amp;quot;:&amp;quot;userid&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;version&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, ] } （2）参数说明
+   参数名称 参数说明 是否必选 备注     userid 用户id 是    version 版本号 是 来自服务端上次回复的version    （3）返回值说明
+data: { &amp;quot;type&amp;quot;:&amp;quot;record&amp;quot;, &amp;quot;fields&amp;quot;:[ {&amp;quot;name&amp;quot;:&amp;quot;version&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, { &amp;quot;type&amp;quot;:&amp;quot;array&amp;quot;, &amp;quot;name&amp;quot;:&amp;quot;alarmlist&amp;quot;, &amp;quot;items&amp;quot;:{ &amp;quot;type&amp;quot;:&amp;quot;record&amp;quot;, &amp;quot;fields&amp;quot;:[ {&amp;quot;name&amp;quot;:&amp;quot;alarmid&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;is_event&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;type&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;level&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;valuetype&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;dival&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;aival&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;double&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;repeat&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;status&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;confirm&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;suppress&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;repair&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;print&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int32&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;pushpic&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int64&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;picname&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;create_time&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int64&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;remove_time&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int64&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;confirm_time&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int64&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;suppress_time&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;int64&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;confirm_user&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;suppress_user&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;station&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;subsystem&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;devicetype&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;deviceid&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;point&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;}, {&amp;quot;name&amp;quot;:&amp;quot;message&amp;quot;,&amp;quot;type&amp;quot;:&amp;quot;string&amp;quot;} ] } } ] }    名称 说明 备注     alarmid 报警id tag.</description>
+    </item>
+    
+  </channel>
+</rss>

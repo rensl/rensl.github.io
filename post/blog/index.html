@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>scs_alarm // My New Hugo Site</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.65.3" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://rensl.github.io/css/main.min.61bb32028587f24ca28522d8d197970c7ef33284e5fffb45a75fcbbb2dbc4dcb.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="scs_alarm"/>
+<meta name="twitter:description" content="#报警接口web服务
+ 2019.12.18 修改历史报警请求字段（is_event, status, is_confirm, confirm_user）
+##实时报警
+1 说明 本文件定义了MetroView4.0实时报警web接口
+2 接口定义 2.1 获取全部报警 （1）接口格式
+url:/alarm/real/pull method:post data: { &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;userid&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;}, ] } （2）参数说明
+   参数名称 参数说明 是否必选 备注     userid 用户id 是    version 版本号 是 来自服务端上次回复的version    （3）返回值说明
+data: { &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;}, { &quot;type&quot;:&quot;array&quot;, &quot;name&quot;:&quot;alarmlist&quot;, &quot;items&quot;:{ &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;alarmid&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;is_event&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;type&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;level&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;valuetype&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;dival&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;aival&quot;,&quot;type&quot;:&quot;double&quot;}, {&quot;name&quot;:&quot;repeat&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;confirm&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;suppress&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;repair&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;print&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;pushpic&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;picname&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;create_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;remove_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;confirm_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;suppress_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;confirm_user&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;suppress_user&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;station&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;subsystem&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;devicetype&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;deviceid&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;point&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;message&quot;,&quot;type&quot;:&quot;string&quot;} ] } } ] }    名称 说明 备注     alarmid 报警id tag."/>
+
+    <meta property="og:title" content="scs_alarm" />
+<meta property="og:description" content="#报警接口web服务
+ 2019.12.18 修改历史报警请求字段（is_event, status, is_confirm, confirm_user）
+##实时报警
+1 说明 本文件定义了MetroView4.0实时报警web接口
+2 接口定义 2.1 获取全部报警 （1）接口格式
+url:/alarm/real/pull method:post data: { &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;userid&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;}, ] } （2）参数说明
+   参数名称 参数说明 是否必选 备注     userid 用户id 是    version 版本号 是 来自服务端上次回复的version    （3）返回值说明
+data: { &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;}, { &quot;type&quot;:&quot;array&quot;, &quot;name&quot;:&quot;alarmlist&quot;, &quot;items&quot;:{ &quot;type&quot;:&quot;record&quot;, &quot;fields&quot;:[ {&quot;name&quot;:&quot;alarmid&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;is_event&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;type&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;level&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;valuetype&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;dival&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;aival&quot;,&quot;type&quot;:&quot;double&quot;}, {&quot;name&quot;:&quot;repeat&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;confirm&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;suppress&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;repair&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;print&quot;,&quot;type&quot;:&quot;int32&quot;}, {&quot;name&quot;:&quot;pushpic&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;picname&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;create_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;remove_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;confirm_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;suppress_time&quot;,&quot;type&quot;:&quot;int64&quot;}, {&quot;name&quot;:&quot;confirm_user&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;suppress_user&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;station&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;subsystem&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;devicetype&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;deviceid&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;point&quot;,&quot;type&quot;:&quot;string&quot;}, {&quot;name&quot;:&quot;message&quot;,&quot;type&quot;:&quot;string&quot;} ] } } ] }    名称 说明 备注     alarmid 报警id tag." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://rensl.github.io/post/blog/" />
+<meta property="article:published_time" content="2020-02-28T14:51:55+08:00" />
+<meta property="article:modified_time" content="2020-02-28T14:51:55+08:00" />
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://rensl.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>My New Hugo Site</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+      <div class="app-header-social">
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">scs_alarm</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Feb 28, 2020
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div></div>
+    </header>
+    <div class="post-content">
+      <p>#报警接口web服务</p>
+<hr>
+<p>2019.12.18 修改历史报警请求字段（is_event, status, is_confirm, confirm_user）</p>
+<p>##实时报警</p>
+<h3 id="1-说明">1 说明</h3>
+<p>本文件定义了MetroView4.0实时报警web接口</p>
+<h3 id="2-接口定义">2 接口定义</h3>
+<h4 id="21-获取全部报警">2.1 获取全部报警</h4>
+<p>（1）接口格式</p>
+<pre><code>url:/alarm/real/pull
+method:post
+data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;userid&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;},
+    ]
+}
+
+</code></pre><p>（2）参数说明</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名称</th>
+<th align="center">参数说明</th>
+<th align="center">是否必选</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">userid</td>
+<td align="center">用户id</td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">version</td>
+<td align="center">版本号</td>
+<td align="center">是</td>
+<td align="center">来自服务端上次回复的version</td>
+</tr>
+</tbody>
+</table>
+<p>（3）返回值说明</p>
+<pre><code>data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;alarmlist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;record&quot;,
+                &quot;fields&quot;:[
+                	{&quot;name&quot;:&quot;alarmid&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;is_event&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;type&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;level&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;valuetype&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;dival&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;aival&quot;,&quot;type&quot;:&quot;double&quot;},
+                    {&quot;name&quot;:&quot;repeat&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;confirm&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;suppress&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;repair&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;print&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;pushpic&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;picname&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;create_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;remove_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;confirm_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;suppress_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;confirm_user&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;suppress_user&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;station&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;subsystem&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;devicetype&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;deviceid&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;point&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;message&quot;,&quot;type&quot;:&quot;string&quot;}
+                ]
+            }
+        }
+    ]
+}
+</code></pre><table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">alarmid</td>
+<td align="center">报警id</td>
+<td align="center">tag.type.value</td>
+</tr>
+<tr>
+<td align="center">is_event</td>
+<td align="center">是否事件报警</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">type</td>
+<td align="center">报警类型</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">level</td>
+<td align="center">报警等级</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">valuetype</td>
+<td align="center">值类型</td>
+<td align="center">0：di，1：ai</td>
+</tr>
+<tr>
+<td align="center">dival</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">aival</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">repeat</td>
+<td align="center">重复产生次数</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">status</td>
+<td align="center">是否消除</td>
+<td align="center">0：已消除，1：未消除</td>
+</tr>
+<tr>
+<td align="center">confirm</td>
+<td align="center">是否确认</td>
+<td align="center">0：未确认，1：已确认</td>
+</tr>
+<tr>
+<td align="center">suppress</td>
+<td align="center">是否抑制</td>
+<td align="center">0：未抑制，1：已抑制</td>
+</tr>
+<tr>
+<td align="center">repair</td>
+<td align="center">挂牌状态</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">print</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">pushpic</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">picname</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">create_time</td>
+<td align="center">产生时间</td>
+<td align="center">毫秒</td>
+</tr>
+<tr>
+<td align="center">remove_time</td>
+<td align="center">消除时间</td>
+<td align="center">毫秒</td>
+</tr>
+<tr>
+<td align="center">confirm_time</td>
+<td align="center">确认时间</td>
+<td align="center">毫秒</td>
+</tr>
+<tr>
+<td align="center">suppress_time</td>
+<td align="center">抑制/取消抑制时间</td>
+<td align="center">毫秒</td>
+</tr>
+<tr>
+<td align="center">confirm_user</td>
+<td align="center">确认用户</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">suppress_user</td>
+<td align="center">抑制/取消抑制用户</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">station</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">subsystem</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">devicetype</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">deviceid</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">point</td>
+<td align="center">点名</td>
+<td align="center">如&quot;HZBJ&rdquo;</td>
+</tr>
+<tr>
+<td align="center">message</td>
+<td align="center">报警描述</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>（4）示例</p>
+<pre><code>url:http://172.20.30.68:8688/alarm/real/pull
+method:post
+data:
+{
+	&quot;userid&quot;:65537,
+    &quot;version&quot;:1000
+}
+return:
+{
+	&quot;version&quot;:1001,
+    &quot;alarmlist&quot;:[
+    	{
+        	&quot;alarmid&quot;:&quot;Z63_PSC_ZISSWS_29_FZWZ.0.1&quot;,
+            &quot;is_event&quot;:0,
+            &quot;type&quot;:0,
+            &quot;level&quot;:3,
+            &quot;valuetype&quot;:0,
+            &quot;dival&quot;:1,
+            &quot;aival&quot;:0,
+            &quot;repeat&quot;:1,
+            &quot;status&quot;:1,
+            &quot;confirm&quot;:0,
+            &quot;suppress&quot;:0,
+            &quot;repair&quot;:0,
+            &quot;print&quot;:0,
+            &quot;pushpic&quot;:0,
+            &quot;picname&quot;:&quot; &quot;,
+            &quot;create_time&quot;:1568783382641,
+            &quot;remove_time&quot;:0,
+            &quot;confirm_time&quot;:0,
+            &quot;suppress_time&quot;:0,
+            &quot;confirm_user&quot;:&quot;&quot;,
+            &quot;suppress_user&quot;:&quot;&quot;,
+            &quot;station&quot;:&quot;Z63&quot;,
+            &quot;subsystem&quot;:&quot;PSC&quot;,
+            &quot;devicetype&quot;:&quot;ZISSWS&quot;,
+            &quot;deviceid&quot;:&quot;Z63_PSC_ZISSWS_29&quot;,
+            &quot;point&quot;:&quot;FZWZ&quot;,
+            &quot;message&quot;:&quot;分闸位置&quot;
+        },
+        {
+        ...
+        },
+        ...
+    ]
+}
+</code></pre><h4 id="22-报警确认">2.2 报警确认</h4>
+<p>（1）接口格式</p>
+<pre><code>url:/alarm/real/confirm
+method:post
+data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;userid&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;alarmid&quot;,
+            items:{
+            	&quot;type&quot;:&quot;string&quot;,
+            }
+        }
+    ]
+}
+
+</code></pre><p>（2）参数说明</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名称</th>
+<th align="center">参数说明</th>
+<th align="center">是否必选</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">userid</td>
+<td align="center">用户id</td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">alarmid</td>
+<td align="center">报警id数组</td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>（3）返回值说明</p>
+<pre><code>data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	&quot;name&quot;:&quot;result&quot;,type:&quot;string&quot;
+    ]
+}
+</code></pre><table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">result</td>
+<td align="center">结果</td>
+<td align="center">固定为“ok”</td>
+</tr>
+</tbody>
+</table>
+<p>（4）示例</p>
+<pre><code>url:http://172.20.30.68:8688/alarm/real/confirm
+method:post
+data:
+{
+	&quot;userid&quot;:65537,
+    &quot;alarmid&quot;:[
+    	&quot;Z63_HK_OPER_0_KZQXFK.15.0&quot;,
+        &quot;Z63_RVS_DLJ1_0_SDZTFK.15.0&quot;
+    ]
+}
+return:
+{
+	&quot;result&quot;:&quot;ok&quot;
+}
+</code></pre><h4 id="23-报警抑制取消抑制">2.3 报警抑制、取消抑制</h4>
+<p>（1）接口格式</p>
+<pre><code>url:/alarm/real/bate
+method:post
+data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;userid&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;alarmid&quot;,
+            items:{
+            	&quot;type&quot;:&quot;string&quot;,
+            }
+        }
+    ]
+}
+
+</code></pre><p>（2）参数说明</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名称</th>
+<th align="center">参数说明</th>
+<th align="center">是否必选</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">userid</td>
+<td align="center">用户id</td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">alarmid</td>
+<td align="center">报警id数组</td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>（3）返回值说明</p>
+<pre><code>data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	&quot;name&quot;:&quot;result&quot;,type:&quot;string&quot;
+    ]
+}
+</code></pre><table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">说明</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">result</td>
+<td align="center">结果</td>
+<td align="center">固定为“ok”</td>
+</tr>
+</tbody>
+</table>
+<p>（4）示例</p>
+<pre><code>url:http://172.20.30.68:8688/alarm/real/bate
+method:post
+data:
+{
+	&quot;userid&quot;:65537,
+    &quot;alarmid&quot;:[
+    	&quot;Z63_HK_OPER_0_KZQXFK.15.0&quot;,
+        &quot;Z63_RVS_DLJ1_0_SDZTFK.15.0&quot;
+    ]
+}
+return:
+{
+	&quot;result&quot;:&quot;ok&quot;
+}
+</code></pre><p>##历史报警</p>
+<h3 id="1-说明-1">1 说明</h3>
+<p>本文件定义了MetroView4.0历史报警web接口</p>
+<h3 id="2-接口定义-1">2 接口定义</h3>
+<h4 id="21-历史报警查询">2.1 历史报警查询</h4>
+<p>（1）接口格式</p>
+<pre><code>url:/alarm/his/query
+method:post
+data:
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;beginrow&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;needrow&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;is_event&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;type&quot;,&quot;type&quot;:&quot;string&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;level&quot;
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;int32&quot;
+            }
+        },
+        {&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;is_confirm&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;createtimebegin&quot;,&quot;type&quot;:&quot;int64&quot;},
+        {&quot;name&quot;:&quot;createtimeend&quot;,&quot;type&quot;:&quot;int64&quot;},
+        {&quot;name&quot;:&quot;station&quot;,&quot;type&quot;:&quot;string&quot;},
+        {&quot;name&quot;:&quot;subsystem&quot;,&quot;type&quot;:&quot;string&quot;},
+        {&quot;name&quot;:&quot;devicetype&quot;,&quot;type&quot;:&quot;string&quot;},
+        {&quot;name&quot;:&quot;device&quot;,&quot;type&quot;:&quot;string&quot;},
+        {&quot;name&quot;:&quot;confirm_user&quot;,&quot;type&quot;:&quot;string&quot;},
+        {&quot;name&quot;:&quot;detailed&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;stationlist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;string&quot;
+            }
+        },
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;subsystemlist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;string&quot;
+            }
+        },
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;devicetypelist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;string&quot;
+            }
+        }，
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;devicelist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;string&quot;
+            }
+        }
+    ]
+}
+</code></pre><p>（2）参数说明</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名称</th>
+<th align="center">参数说明</th>
+<th align="center">是否必选</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">beginrow</td>
+<td align="center"></td>
+<td align="center">是</td>
+<td align="center">填-1返回以needrow行数为一页的最后一页</td>
+</tr>
+<tr>
+<td align="center">needrow</td>
+<td align="center"></td>
+<td align="center">是</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">is_event</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">type</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">level</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center">数组</td>
+</tr>
+<tr>
+<td align="center">status</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">is_confirm</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">createtimebegin</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center">单位：秒</td>
+</tr>
+<tr>
+<td align="center">createtimeend</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center">单位：秒</td>
+</tr>
+<tr>
+<td align="center">station</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">subsystem</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">devicetype</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">device</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">confirm_user</td>
+<td align="center">确认用户</td>
+<td align="center">否</td>
+<td align="center">不填则表示任意用户</td>
+</tr>
+<tr>
+<td align="center">detailed</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center">1时取station,subsystem,devicetype和device,0时取stationlist,subsystemlist,devicetypelist，devicelist进行查询</td>
+</tr>
+<tr>
+<td align="center">stationlist</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">subsystemlist</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">devicetypelist</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">devicelist</td>
+<td align="center"></td>
+<td align="center">否</td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>（3）返回值说明</p>
+<pre><code>成功：
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;version&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {
+        	&quot;type&quot;:&quot;array&quot;,
+            &quot;name&quot;:&quot;alarmlist&quot;,
+            &quot;items&quot;:{
+            	&quot;type&quot;:&quot;record&quot;,
+                &quot;fields&quot;:[
+                	{&quot;name&quot;:&quot;alarmid&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;is_event&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;type&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;level&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;repeat&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;confirm&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;suppress&quot;,&quot;type&quot;:&quot;int32&quot;},
+                    {&quot;name&quot;:&quot;create_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;remove_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;confirm_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;suppress_time&quot;,&quot;type&quot;:&quot;int64&quot;},
+                    {&quot;name&quot;:&quot;confirm_user&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;suppress_user&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;station&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;subsystem&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;devicetype&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;deviceid&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;point&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;message&quot;,&quot;type&quot;:&quot;string&quot;},
+                    {&quot;name&quot;:&quot;action&quot;,&quot;type&quot;:&quot;string&quot;}
+                ]
+            }
+        }
+    ]
+}
+失败：
+{
+	&quot;type&quot;:&quot;record&quot;,
+    &quot;fields&quot;:[
+    	{&quot;name&quot;:&quot;total&quot;,&quot;type&quot;:&quot;int32&quot;},
+        {&quot;name&quot;:&quot;error&quot;,&quot;type&quot;:&quot;string&quot;}
+    ]
+}
+</code></pre><p>（4）示例</p>
+<pre><code>url:http://172.20.30.68:8688/alarm/his/query
+method:post
+data:
+{
+	&quot;beginrow&quot;: 1,
+    &quot;needrow&quot;: 20,
+    &quot;is_event&quot;: 0,
+    &quot;type&quot;: 15,
+    &quot;level&quot;: [1,2,3,4],
+    &quot;status&quot;: 1,
+    &quot;is_confirm&quot;: 0,
+    &quot;createtimebegin&quot;: 1111111111,
+    &quot;createtimeend&quot;: 2222222222,
+    &quot;station&quot;: &quot;Z63&quot;,
+    &quot;subsystem&quot;: &quot;RVS&quot;,
+    &quot;devicetype&quot;: &quot;DLJ1&quot;,
+    &quot;device&quot;: &quot;Z63_RVS_DLJ1_0&quot;,
+    &quot;detailed&quot;: 1,
+    &quot;stationlist&quot;: [
+        &quot;***&quot;,
+        &quot;***&quot;
+    ],
+    &quot;subsystemlist&quot;: [
+        &quot;***&quot;,
+        &quot;***&quot;
+    ],
+    &quot;devicetypelist&quot;: [
+        &quot;***&quot;,
+        &quot;***&quot;
+    ]，
+    &quot;devicelist&quot;:[
+    	&quot;***&quot;,
+        &quot;***&quot;
+    ]
+}
+
+return:
+{
+	&quot;total&quot;: 20,
+    &quot;beginrow&quot;:1,
+    &quot;alarmlist&quot;: [
+        {
+            &quot;alarmid&quot;: &quot;Z63_RVS_DLJ1_0_SDZTFK.15.0&quot;,
+            &quot;is_event&quot;:0,
+            &quot;type&quot;:15,
+            &quot;level&quot;:4,
+            &quot;repeat&quot;:1,
+            &quot;status&quot;:0,
+            &quot;confirm&quot;:0,
+            &quot;suppress&quot;:1,
+            &quot;create_time&quot;:1568619381406,
+            &quot;remove_time&quot;:1568619386418,
+            &quot;confirm_time&quot;:0,
+            &quot;suppress_time&quot;:1569391618341,
+            &quot;confirm_user&quot;:&quot;&quot;,
+            &quot;suppress_user&quot;:&quot;rsl&quot;,
+            &quot;station&quot;:&quot;Z63&quot;,
+            &quot;subsystem&quot;:&quot;RVS&quot;,
+            &quot;devicetype&quot;:&quot;DLJ1&quot;,
+            &quot;deviceid&quot;:&quot;Z63_RVS_DLJ1_0&quot;,
+            &quot;point&quot;:&quot;SDZTFK&quot;,
+            &quot;message&quot;:&quot;枚举量状态 0 报警5&quot;,
+            &quot;action&quot;:&quot;抑制&quot;
+        },
+        // ...
+    ]
+}
+or:
+{
+	&quot;total&quot;:-1,
+    &quot;error&quot;:&quot;service is busy&quot;;
+}
+
+</code></pre>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
